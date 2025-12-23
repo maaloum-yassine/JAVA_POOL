@@ -1,14 +1,36 @@
+import java.util.Scanner;
+
 public class Program
 {
     public static void main(String[] args)
     {
-        System.out.println("Byte size in bits: " + Byte.SIZE);
-        System.out.println("Short size in bits: " + Short.SIZE);
-        System.out.println("Long size in bits: " + Long.SIZE);
-        System.out.println("Float size in bits: " + Float.SIZE);
-        System.out.println("Double size in bits: " + Double.SIZE);        
-        System.out.println("Integer size in bits: " + Integer.SIZE);
-        System.out.println("Character size in bits: " + Character.SIZE);
-        System.out.println("Boolean size in Java: JVM dependent, usually 1 byte");
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        scanner.close();
+
+        if (n <= 1)
+        {
+            System.err.println("IllegalArgument");
+            System.exit(-1);
+            // return;
+        }
+
+        int count = 0;
+        boolean isPrime = true;
+        double sqrtN = Math.sqrt(n);
+        
+        if (sqrtN != (int)sqrtN)
+            sqrtN = (int)sqrtN + 1;
+        for (int i = 2; i <= sqrtN; i++)
+        {
+            count++;
+            if (n % i == 0)
+            {
+                isPrime = false;
+                break;
+            }
+        }
+        System.out.println(isPrime + " " + count);
     }
 }

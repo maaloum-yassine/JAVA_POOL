@@ -14,18 +14,15 @@
 // }
 
 
-
-
-public class  Program {
-    public static void main(String[] args) {
+public class Program {
+    public static void main(String [] args) {
         int number = 479598;
-        int sum = 0;
+        int result = 0;
         while (number > 0)
         {
-            int digit = number % 10;
+            result +=  (number % 10);
             number = number / 10;
-            sum +=  digit;
         }
-        System.out.println(sum);
+        System.out.println(result);
     }
 }
