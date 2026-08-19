@@ -41,33 +41,45 @@ public class Program
         return ((int)res * sign);
     }
 
+
+    static boolean returnResult(boolean result)
+    {
+        return result;
+    }
     static int CheckPrime(int number)
     {
-        int numberCheker = number;
 
-        while (--numberCheker > 1)
+        int numberCheker = 2;
+        int i = 1;
+        int count = 1;
+
+        while (numberCheker * numberCheker <= number)
+            numberCheker++;
+        
+        while (++i  <= numberCheker - 1)
         {
-            if (number % numberCheker == 0)
-                return numberCheker;
+            if (number % i  == 0)
+                return -count;
+            count++;
         }
-        return -1;
+        return count;
     }
 
     public static void main (String args[])
     {
         Scanner sc = new Scanner(System.in);
-        String number_in = sc.next();
-            
+        String number_in = sc.next();   
         int number = atoi(number_in);
+
         if (number <= 1)
             System.err.println("IllegalArgument");
         else
         {
             int result = CheckPrime(number);
-            if (result != -1)
-                System.out.println("true " + number);
+            if (result > 0)
+                System.out.println("true " + result);
             else
-                System.out.println("false " + number);
+                System.out.println("false " + (-result));
         }
         sc.close();
     }
