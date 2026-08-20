@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Program
 {
-    public static int atoi(String arg)
+    public static int parseInteger(String arg)
     {
         long res = 0;
         int sign = 1;
@@ -42,11 +42,7 @@ public class Program
     }
 
 
-    static boolean returnResult(boolean result)
-    {
-        return result;
-    }
-    static int CheckPrime(int number)
+    static int isPrimCount(int number)
     {
 
         int numberCheker = 2;
@@ -69,13 +65,13 @@ public class Program
     {
         Scanner sc = new Scanner(System.in);
         String number_in = sc.next();   
-        int number = atoi(number_in);
+        int number = parseInteger(number_in);
 
         if (number <= 1)
             System.err.println("IllegalArgument");
         else
         {
-            int result = CheckPrime(number);
+            int result = isPrimCount(number);
             if (result > 0)
                 System.out.println("true " + result);
             else
