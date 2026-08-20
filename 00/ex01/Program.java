@@ -2,26 +2,26 @@ import java.util.Scanner;
 
 public class Program
 {
-    public static int parseInteger(String arg)
+    public static int parseInteger(String strDigit)
     {
         long res = 0;
         int sign = 1;
         int i = -1;
-        int length_arg = arg.length();
+        int lengthDigit = strDigit.length();
 
-        while (++i < length_arg) {
-            char c = arg.charAt(i);
+        while (++i < lengthDigit) {
+            char c = strDigit.charAt(i);
             if (!(c == ' ' || c == '\t' || c == '\n'))
                 break ;
         }   
-        if ((i < length_arg) && (arg.charAt(i) == '-' || arg.charAt(i) == '+')) {
-            if (arg.charAt(i) == '-')
+        if ((i < lengthDigit) && (strDigit.charAt(i) == '-' || strDigit.charAt(i) == '+')) {
+            if (strDigit.charAt(i) == '-')
                 sign = -1;
             i++;
         }
 
-        while (i < length_arg) {
-            char c = arg.charAt(i); 
+        while (i < lengthDigit) {
+            char c = strDigit.charAt(i); 
             if (c >= '0' && c <= '9')
             {
                 if ((res * sign > Integer.MAX_VALUE) || (res * sign < Integer.MIN_VALUE))
@@ -32,9 +32,9 @@ public class Program
                 break; 
             i++;
         }
-        if (i < length_arg)
+        if (i < lengthDigit)
         {
-            char c = arg.charAt(i);
+            char c = strDigit.charAt(i);
             if (c != '\t' && c != ' ')
                 return  -1;
         }
