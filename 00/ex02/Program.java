@@ -31,21 +31,30 @@ public class Program
 
     public static void main(String args[])
     {
-        Scanner sc = new Scanner(System.in);
         int number  = 0;
         int sumOfDigit = 0;
         int count = 0;
-    
-        while (true)
-        {
-            number = sc.nextInt();
-            if (number == 42)
-                break ;
-            sumOfDigit = calcSum(number);
-            if ((number > 2) && isPrim(sumOfDigit))
-                count++;
+        Scanner sc = new Scanner(System.in);
+        
+        do
+        {   
+            if(sc.hasNextInt())
+            {
+                number = sc.nextInt();
+                if (number == 42)
+                    break ;
+                sumOfDigit = calcSum(number);
+                if ((number > 2) && isPrim(sumOfDigit))
+                    count++;
+            }
+            else
+            {
+                sc.next(); 
+                System.out.println("Input has be Integer");
+            }
+        }while (true);
+        
+            System.out.println("Count of coffee-request :" + count);
+            sc.close();
         }
-        System.out.println("Count of coffee-request :" + count);
-        sc.close();
     }
-}
