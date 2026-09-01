@@ -3,84 +3,97 @@ import java.util.Scanner;
 public class Program 
 {
 
-    public static char[] ppp (char alphabet, int repetition)
+
+    public static void dispalyFrequencyAnalysis(int[] arrangingAlpha, char[] repAlphabet)
     {
-        char [] test = new char[10];
-        int [] rep = new int[10];
-
-        for (int i = -1; i < rep.length; i++)
+        // for (int j = 10 ; j >= Res; j++)
+        // {
+        //     System.out.print();
+        // }
+        
+        for (int  i = -1; i < 10 ; i++)
         {
-            if (repetition > rep[i])
-            {
-                test[i] = alphabet;
-                rep[i] = repetition;
-            }
+            int Res =  (arrangingAlpha[i] * 10) / arrangingAlpha[i];
+            if (Res == )
         }
-
-        return test;
-
-    }   
-
-    public static char[] pp (int [] unicodeChar)
-    {
-        char [] test = new char[10];
-        for (int i = -1; i < unicodeChar.length; i++)
-        {
-            if (unicodeChar[i] > 0)
-            {
-                test = insertPosiition(unicodeChar[i] , i);
-            }
-        }
-        return test;
     }
+
+    public static  int returnIndex(int repUniCode, int[] repAlphabet, char [] arrangingAlpha)
+    {
+        int index = 0;
+        for (index = 0; index < repAlphabet.length; index++)
+        {
+            if (repAlphabet[index] <= repUniCode)
+            {
+                for (int j = index; j < repAlphabet.length; j++)
+                {
+                    if (repAlphabet[index] > repAlphabet[j])
+                    {
+                        int tmp = repAlphabet[j];
+                        repAlphabet[j] = repAlphabet[index];
+                        repAlphabet[index] =  tmp;
+
+                        char tmpChar = arrangingAlpha[j];
+                        arrangingAlpha[j] = arrangingAlpha[index];
+                        arrangingAlpha[index] =  tmpChar;
+                    }
+                }
+                break ;
+            }
+        }
+        return index;
+    }
+
+    public static void handlArrays (int [] unicodeChar)
+    {
+            int correctIndex;
+        char [] arrangingAlpha = new char[10];
+        int [] repAlphabet = new int[10];
+
+
+        for (int i = 0; i < unicodeChar.length; i++)
+        {
+                if (unicodeChar[i] > 0)
+            {
+                correctIndex = returnIndex(unicodeChar[i], repAlphabet, arrangingAlpha);
+                repAlphabet[correctIndex] = unicodeChar[i];
+                arrangingAlpha[correctIndex] = (char)i;
+            }
+        }
+        dispalyFrequencyAnalysis(repAlphabet, arrangingAlpha);
+
+        // for (char c : arrangingAlpha) {
+            
+        //     System.out.println( "Array Char -------------<<<<>>>> " + c);
+        // }
+    
+        // for (int x : repAlphabet) {
+            
+        //     System.out.println( "repAlphabet  -------------<<<<>>>> " + x);
+        // }
+        
+    }
+
+
+
     public static void main (String args[])
     {
         String input;
            
         Scanner sc = new Scanner(System.in);
-        input = sc.nextLine();
+        input = "abbbcccccddddd11112222333555111      dddiiooo999999665555www";
         char [] inputCharArray = input.toCharArray();
         int [] unicodeChar =  new int [65536];
-        int count = 0;
         
         if (input.length() > 0)
         {
             for (int i = 0; i < inputCharArray.length; i++)
             {
                 if (unicodeChar[i] != 999)
-                {
-                    if (unicodeChar[inputCharArray[i]]  == 0)
-                        count++;
-                        unicodeChar[inputCharArray[i]]++;    
-                }
+                    unicodeChar[inputCharArray[i]]++;    
             }
         }
-        // char [] alphabetReference = new char[10];
-
-        pp(unicodeChar);
-        // char [] alphabetReference =  new char [count];
-        // int [] repetitionChar =  new int [count];
- 
-        // int j = -1;
-        // int i = 0;
-
-        // while (++j < unicodeChar.length ){
-        // if (unicodeChar[j] != 0)
-        // {
-        //     alphabetReference[i] = (char)j;
-        //     repetitionChar[i++] = unicodeChar[j];
-        // }      
+        handlArrays(unicodeChar);
+        sc.close();
     }
-    // int tmp = repetitionChar[0];
-    // for (int i = 0 ; i < repetitionChar.length; i++)
-    // {
-    //     for ()
-    //     {}
-    //     // if (tmp > alphabetReference[i])
-    //     // {
-
-    //     // }
-    // }
-        sc.close();  
-    }  
 }
