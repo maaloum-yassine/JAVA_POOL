@@ -6,10 +6,8 @@ public class Program
     private static final String[] days = {"MO", "TU", "WE", "TH", "FR", "SA", "SU"};
         private static void displayClasses(String[] classes)
     {
-        
+
         int day = 1;
-        int continueDay;
-        int count = 0;
         for ( ; day <= 30; day++)
         {
             int  i = 0;
@@ -22,11 +20,7 @@ public class Program
                 String currentDay = days[dayOfWeek];
                 scannerDay.close();
                 if (currentDay.equals(dayS))
-                { 
                     System.out.print("\t" + time+":00 " + currentDay + " " +  day + "|" );
-                    count++;
-                    break ;
-                }
                 i++;
             }
         }
@@ -39,7 +33,6 @@ public class Program
     {   
         int day;
         int j = 0;
-        int n = 0;
         boolean checkIsP = false;
         while (names[j] != null && j < names.length)
         {
@@ -52,6 +45,7 @@ public class Program
                     Scanner scannerDay = new Scanner(classes[x]);
                     String time = scannerDay.next();
                     String dayS = scannerDay.next();
+                    scannerDay.close();
                     int dayOfWeek = (1 + (day - 1)) % 7;
                     String currentDay = days[dayOfWeek];
                     if (currentDay.equals(dayS))
@@ -63,9 +57,7 @@ public class Program
                             String  nameP = scannerProgram.next();
                             String  secanceP = scannerProgram.next();
                             int     dayP = scannerProgram.nextInt();
-                            String currentDayP = days[(1 + (dayP - 1)) % 7];
                             String  presenceP = scannerProgram.next();
-                            // System.out.println("presenceP " +  presenceP);
                             scannerProgram.close();
                             if (names[j].equals(nameP) && dayP == day  && secanceP.equals(time))
                             {
@@ -82,7 +74,6 @@ public class Program
                             System.out.print("\t         |");
                         else
                             checkIsP = false;
-                        break ;
                     }
                     x++;
                 }
@@ -92,32 +83,48 @@ public class Program
         }
     }
 
+    private static boolean checkDuplicatedName(String nameStudent, String[] names)
+    {
+        int i = 0;
+
+        while(names[i] != null && i < names.length)
+        {
+            if (names[i].equals(nameStudent))
+                return false;
+            i++;
+        }
+        return true;
+    }
+
     private static byte fillNames(Scanner sc, String[] names)
     {
         String input;
         int count = 0;
-        
-        while ((!((input = sc.nextLine()).equals("."))) && count != 9)
+        String nameStudent = "";
+        byte res = 0;
+
+        while ((res == 0) && (!((input = sc.nextLine()).equals("."))) && count != 9)
         {   
-            if (input.length() == 0 || input.length() > 10)
-                return 1;
-            else
-            {
                 Scanner scInput = new Scanner(input);
-                scInput.next();
                 if (scInput.hasNext())
-                    {
-                        scInput.close();
-                        return 2;
-                    }
-                    scInput.close();
-                    names[count++] = input;
-            }
+                    nameStudent = scInput.next();
+                else
+                    res = 1;
+                if (scInput.hasNext())
+                    res = 2;
+                else if (nameStudent.length() > 10)
+                    res = 3;
+                else if (!checkDuplicatedName(nameStudent, names))
+                        System.out.println("Your input name  is already duplicated -______>> "+ nameStudent + " [^_^]!");
+                else
+                    names[count++] = nameStudent;
+                scInput.close();
         }
-        if (count == 0)
-            return 3;
-        return 4;
-    }   
+        if (count == 9)
+            return 9;
+        return res;
+    }
+        
 
 
   private static boolean checkDuplicatedClasses(String[] classes, String input)
@@ -189,7 +196,10 @@ public class Program
                     return 2;
                 }
                 if (scInput.hasNext())
+                {
+                    scInput.close();
                     return 3;
+                }
                 scInput.close();
                 if (!checkTime(time))
                     return 4;
@@ -203,7 +213,7 @@ public class Program
    
     private static String[] classOrder(String[] classes)    
     {
-        String[] orderClasses = new String[10];
+        String[] orderClasses = classes;
         int count = 0;
 
         // Order by day
@@ -212,7 +222,6 @@ public class Program
             for (int i = 0; i < classes.length && classes[i] != null; i++)
             {
                 Scanner sc = new Scanner(classes[i]);
-                String time = sc.next();
                 String day = sc.next();
                 sc.close();
 
@@ -250,9 +259,11 @@ public class Program
 
     private static boolean checkName(String[] names, String name)
     {
+        
         int i = -1;
         while (++i < names.length && names[i] != null)
         {
+            
             if (names[i].equals(name))
                 return true;
         } 
@@ -327,13 +338,9 @@ public class Program
         while (classes[i] != null  && i < classes.length )
         {
            if (inputSceance.equals(classes[i]))
-            {
-                foramt.close();
                 return true;
-            }
             i++;
         }
-        foramt.close();
         return false;
     }
 
@@ -378,42 +385,30 @@ public class Program
     }
 
     
-    private static byte checkInLine (String[] names, String[] classes, String input)
+    private static byte checkInLine(String[] names, String[] classes, String input)
     {
-        String  name;
-        String  day;
-        String  hour;
-        String  presence;
-        byte    res = 0;
-
         Scanner line = new Scanner(input);
-        if (!line.hasNext())
-            res = 1;
-        name = line.next();
-        if (!line.hasNext())
-            res = 1;
-        day = line.next();
-        if (!line.hasNext())
-            res = 1;
-        hour = line.next();
-        if (!line.hasNext())
-            res = 1;
-        presence = line.next();
-        if (line.hasNext())
-            res = 1;
-        if (!checkName(names, name))
-            res = 2;
-        if (!checkDate(day, hour))
-            res = 3;
-        if (!checkPresence(presence))
-            res = 4;
-        if (!checkSceance(classes, day, hour))
-            res = 5;
+
+        if (!line.hasNext()) { line.close(); return 1; }
+        String name = line.next();
+
+        if (!line.hasNext()) { line.close(); return 1; }
+        String day = line.next();
+
+        if (!line.hasNext()) { line.close(); return 1; }
+        String hour = line.next();
+
+        if (!line.hasNext()) { line.close(); return 1; }
+        String presence = line.next();
+
+        if (line.hasNext()) { line.close(); return 1; }
+        if (!checkName(names, name)) { line.close(); return 2; }
+        if (!checkDate(day, hour)) { line.close(); return 3; }
+        if (!checkPresence(presence)) { line.close(); return 4; }
+        if (!checkSceance(classes, day, hour)) { line.close(); return 5; }
 
         line.close();
-        if (res == 0)
-            return 6;
-        return res;
+        return 6;
     }
 
     private static byte presenceStudent(Scanner sc, String[] names, String[] classes)
@@ -429,8 +424,10 @@ public class Program
             check = checkInLine(names, classes,  input);
 
             if (check != 6)
+            {
+                line.close();
                 return check;
-
+            }
             boolean checkIt  = findProgram(programForAll, input);
             if (checkIt)
               programForAll[i++] = input;
@@ -454,13 +451,15 @@ public class Program
         byte StepOne = fillNames(sc, names);
         
         if (StepOne == 1)
-            System.err.println("Maximum length of a stu-dent’s name is 10 (no spaces) [^_^]!");
+            System.err.println("Error -> Empty input. [^_^]!");
         else if (StepOne == 2)
-            System.err.println("The student's name must not contain spaces. [^_^]!");
+            System.err.println("Error -> The student's name must not contain spaces. [^_^]!");
         else if (StepOne == 3)
-            System.out.println("See You [^_^]!");
+            System.out.println("Error -> Maximum length of a student’s name is 10 (no spaces)[^_^]!");
         else
         {
+            if (StepOne == 9)
+                System.out.println("You have filled in the entire student list. [^_^]!");
             byte stepTwo = checkDateSceance(sc, classes);
             if (stepTwo == 1)
                 System.err.println("Error -> Enter the time (1 pm to 6 pm) and the day (MO, TU, WE, TH, FR, SA, SU). [^_^]!");
