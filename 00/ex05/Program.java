@@ -1,33 +1,15 @@
 import java.util.Scanner;
 
+/**
+ * Program
+ */
 public class Program 
 {
 
     private static final String[] days = {"MO", "TU", "WE", "TH", "FR", "SA", "SU"};
-        private static void displayClasses(String[] classes)
-    {
+            
 
-        int day = 1;
-        for ( ; day <= 30; day++)
-        {
-            int  i = 0;
-            while (i < classes.length && classes[i] != null )
-            {
-                Scanner scannerDay = new Scanner(classes[i]);
-                String time = scannerDay.next();
-                String dayS = scannerDay.next();
-                int dayOfWeek = (1 + (day - 1)) % 7;
-                String currentDay = days[dayOfWeek];
-                scannerDay.close();
-                if (currentDay.equals(dayS))
-                    System.out.print("\t" + time+":00 " + currentDay + " " +  day + "|" );
-                i++;
-            }
-        }
-        System.out.println();
-        
-    }        
-
+    // *********************************** Function for presenceStudent   ************************************//
 
     private static void  displayStudents(String[] programForAll, String[] names, String[] classes)
     {   
@@ -83,193 +65,101 @@ public class Program
         }
     }
 
-    private static boolean checkDuplicatedName(String nameStudent, String[] names)
+    private static void displayClasses(String[] classes)
     {
-        int i = 0;
 
-        while(names[i] != null && i < names.length)
+        int day = 1;
+        for ( ; day <= 30; day++)
         {
-            if (names[i].equals(nameStudent))
-                return false;
-            i++;
+            int  i = 0;
+            while (i < classes.length && classes[i] != null )
+            {
+                Scanner scannerDay = new Scanner(classes[i]);
+                String time = scannerDay.next();
+                String dayS = scannerDay.next();
+                int dayOfWeek = (1 + (day - 1)) % 7;
+                String currentDay = days[dayOfWeek];
+                scannerDay.close();
+                if (currentDay.equals(dayS))
+                    System.out.print("\t" + time+":00 " + currentDay + " " +  day + "|" );
+                i++;
+            }
         }
-        return true;
-    }
-
-    private static byte fillNames(Scanner sc, String[] names)
-    {
-        String input;
-        int count = 0;
-        String nameStudent = "";
-        byte res = 0;
-
-        while ((res == 0) && (!((input = sc.nextLine()).equals("."))) && count != 9)
-        {   
-                Scanner scInput = new Scanner(input);
-                if (scInput.hasNext())
-                    nameStudent = scInput.next();
-                else
-                    res = 1;
-                if (scInput.hasNext())
-                    res = 2;
-                else if (nameStudent.length() > 10)
-                    res = 3;
-                else if (!checkDuplicatedName(nameStudent, names))
-                        System.out.println("Your input name  is already duplicated -______>> "+ nameStudent + " [^_^]!");
-                else
-                    names[count++] = nameStudent;
-                scInput.close();
-        }
-        if (count == 9)
-            return 9;
-        return res;
-    }
-        
-
-
-  private static boolean checkDuplicatedClasses(String[] classes, String input)
-    {
-        int i = 0;
-
-        while(classes[i] != null && i < classes.length)
-        {
-            if (classes[i].equals(input))
-                return false;
-            i++;
-        }
-        return true;
+        System.out.println();
     }
     
 
-    private static boolean checkTime(int time)
+    private static boolean findProgram(String[] programForAll, String input)
     {
-        if (time < 1 || time > 6)
-            return false;
-        return  true;
-    }
 
-    private static boolean checkDay(String[] classes, String input ,String day, int[] count)
-    {
-        boolean checkDay = false;
+        Scanner scInput = new Scanner(input);
 
-        for (String strday : days)
+        String name = scInput.next();
+        String day = scInput.next();
+        String time = scInput.next();
+
+        for (int i = 0; i < programForAll.length; i++)
         {
-            if (strday.equals(day))
+            if (programForAll[i] == null)
             {
-                checkDay = true;
-                if (checkDuplicatedClasses(classes, input))
-                {
-                    classes[count[0]++] = input;
-                    break ;
-                }
-                else
-                {
-                    System.out.println("Your input is already duplicated -______>> "+ input + " [^_^]!");
-                    count[0]--;
-                }    
-            }
-        }
-        return checkDay;
-    }
-
-    private static byte checkDateSceance(Scanner sc, String[] classes)
-    {
-        String input;
-        int  time;
-        String day;
-        int []count = {0};
-        while ((!((input = sc.nextLine()).equals("."))) && count[0] != 9)
-        {   
-            Scanner scInput = new Scanner(input);
-                if (scInput.hasNextInt())
-                    time = scInput.nextInt();  
-                else
-                {
-                    scInput.close();
-                    return 1;
-                }
-                if (scInput.hasNext())
-                    day = scInput.next();
-                else
-                {
-                    scInput.close();
-                    return 2;
-                }
-                if (scInput.hasNext())
-                {
-                    scInput.close();
-                    return 3;
-                }
                 scInput.close();
-                if (!checkTime(time))
-                    return 4;
-                if (!checkDay(classes, input, day, count))
-                    return 5;
-        }
-        return 6;
-    }
-        
-
-   
-    private static String[] classOrder(String[] classes)    
-    {
-        String[] orderClasses = classes;
-        int count = 0;
-
-        // Order by day
-        for (int j = 0; j < days.length; j++)
-        {
-            for (int i = 0; i < classes.length && classes[i] != null; i++)
-            {
-                Scanner sc = new Scanner(classes[i]);
-                String day = sc.next();
-                sc.close();
-
-                if (days[j].equals(day))
-                    orderClasses[count++] = classes[i];
-            }
-        }
-
-        // Order by time
-        for (int i = 0; i < count - 1; i++)
-        {
-            for (int j = 0; j < count - 1 - i; j++)
-            {
-                Scanner sc1 = new Scanner(orderClasses[j]);
-                Scanner sc2 = new Scanner(orderClasses[j + 1]);
-
-                int time1 = sc1.nextInt();
-                int time2 = sc2.nextInt();
-
-                sc1.close();
-                sc2.close();
-
-                if (time1 > time2)
-                {
-                    String temp = orderClasses[j];
-                    orderClasses[j] = orderClasses[j + 1];
-                    orderClasses[j + 1] = temp;
-                }
-            }
-        }
-        return orderClasses;
-    }
-
-      
-
-    private static boolean checkName(String[] names, String name)
-    {
-        
-        int i = -1;
-        while (++i < names.length && names[i] != null)
-        {
-            
-            if (names[i].equals(name))
                 return true;
-        } 
+            }
+
+            Scanner scProgram = new Scanner(programForAll[i]);
+
+            String pName = scProgram.next();
+            String pDay = scProgram.next();
+            String pTime = scProgram.next();
+
+            if (name.equals(pName)
+                    && day.equals(pDay)
+                    && time.equals(pTime)) {
+
+                scProgram.close();
+                scInput.close();
+                return false;
+            }
+            scProgram.close();
+        }
+            scInput.close();
+        return true;
+    }
+
+    private static String retournDay(int daySceance)
+    {
+        int dayOfWeek = (1 + (daySceance - 1)) % 7;
+        return(days[dayOfWeek]);
+
+    }
+
+    private static boolean checkSceance(String[] classes, String day, String hour)
+    {
+        int i = 0;
+        String date = day + " " + hour;
+        Scanner foramt = new Scanner(date);
+        String numberHour = foramt.next();
+        int numberDay = foramt.nextInt();
+        foramt.close();
+        String dayOfSeance = retournDay(numberDay);
+        String inputSceance = numberHour + " " + dayOfSeance;
+        while (classes[i] != null  && i < classes.length )
+        {
+           if (inputSceance.equals(classes[i]))
+                return true;
+            i++;
+        }
         return false;
     }
+    
 
+    private static boolean checkPresence(String presence)
+    {
+        if (presence.equals("NOT_HERE") || presence.equals("HERE"))
+            return true;
+        return false;
+    }
+    
 
     private static boolean checkDate(String day, String hour)
     {
@@ -309,82 +199,19 @@ public class Program
     }
 
 
-    private static boolean checkPresence(String presence)
+    private static boolean checkName(String[] names, String name)
     {
-        if (presence.equals("NOT_HERE") || presence.equals("HERE"))
-            return true;
+        
+        int i = -1;
+        while (++i < names.length && names[i] != null)
+        {
+            
+            if (names[i].equals(name))
+                return true;
+        } 
         return false;
     }
 
-    private static String retournDay(int daySceance)
-    {
-        int dayOfWeek = (1 + (daySceance - 1)) % 7;
-        return(days[dayOfWeek]);
-
-    }
-
-    private static boolean checkSceance(String[] classes, String day, String hour)
-    {
-        int i = 0;
-
-        String date = day + " " + hour;
-        Scanner foramt = new Scanner(date);
-        String numberHour = foramt.next();
-        int numberDay = foramt.nextInt();
-        foramt.close();
-
-        String dayOfSeance = retournDay(numberDay);
-        String inputSceance = numberHour + " " + dayOfSeance;
-        while (classes[i] != null  && i < classes.length )
-        {
-           if (inputSceance.equals(classes[i]))
-                return true;
-            i++;
-        }
-        return false;
-    }
-
-
-
-
-        private static boolean findProgram(String[] programForAll, String input)
-    {
-
-        Scanner scInput = new Scanner(input);
-
-        String name = scInput.next();
-        String day = scInput.next();
-        String time = scInput.next();
-
-        for (int i = 0; i < programForAll.length; i++)
-        {
-            if (programForAll[i] == null)
-            {
-                scInput.close();
-                return true;
-            }
-
-            Scanner scProgram = new Scanner(programForAll[i]);
-
-            String pName = scProgram.next();
-            String pDay = scProgram.next();
-            String pTime = scProgram.next();
-
-            if (name.equals(pName)
-                    && day.equals(pDay)
-                    && time.equals(pTime)) {
-
-                scProgram.close();
-                scInput.close();
-                return false;
-            }
-            scProgram.close();
-        }
-            scInput.close();
-        return true;
-    }
-
-    
     private static byte checkInLine(String[] names, String[] classes, String input)
     {
         Scanner line = new Scanner(input);
@@ -440,7 +267,208 @@ public class Program
         return 6;
     }
 
+    // ***********************************       presenceStudent      ************************************//
 
+
+
+    // ***********************************  Function for classOrder   ************************************//
+
+    private static String[] classOrder(String[] classes)    
+    {
+        String[] orderClasses = classes;
+        int count = 0;
+
+        // Order by day
+        for (int j = 0; j < days.length; j++)
+        {
+            for (int i = 0; i < classes.length && classes[i] != null; i++)
+            {
+                Scanner sc = new Scanner(classes[i]);
+                String day = sc.next();
+                sc.close();
+
+                if (days[j].equals(day))
+                    orderClasses[count++] = classes[i];
+            }
+        }
+
+        // Order by time
+        for (int i = 0; i < count - 1; i++)
+        {
+            for (int j = 0; j < count - 1 - i; j++)
+            {
+                Scanner sc1 = new Scanner(orderClasses[j]);
+                Scanner sc2 = new Scanner(orderClasses[j + 1]);
+
+                int time1 = sc1.nextInt();
+                int time2 = sc2.nextInt();
+
+                sc1.close();
+                sc2.close();
+
+                if (time1 > time2)
+                {
+                    String temp = orderClasses[j];
+                    orderClasses[j] = orderClasses[j + 1];
+                    orderClasses[j + 1] = temp;
+                }
+            }
+        }
+        return orderClasses;
+    }
+    // ***********************************          classOrder    ************************************//
+
+
+    // ***********************************Function for classes   ************************************//
+
+
+    private static boolean checkDuplicatedClasses(String[] classes, String input)
+    {
+        int i = 0;
+
+        while(classes[i] != null && i < classes.length)
+        {
+            if (classes[i].equals(input))
+                return false;
+            i++;
+        }
+        return true;
+    }
+
+
+    private static boolean checkDay(String[] classes, String input ,String day, int[] count)
+    {
+        boolean checkDay = false;
+        String  time;
+        String  dayTime;
+
+        for (String strday : days)
+        {
+            if (strday.equals(day))
+            {
+                checkDay = true;
+                if (checkDuplicatedClasses(classes, input))
+                {
+                    Scanner scClasses = new Scanner(input);
+                    time = scClasses.next();
+                    dayTime = scClasses.next();
+                    scClasses.close();
+                    classes[count[0]++] = time + " " + dayTime;
+                    break ;
+                }
+                else
+                {
+                    System.out.println("Your input is already duplicated -______>> "+ input + " [^_^]!");
+                    count[0]--;
+                }    
+            }
+        }
+        for (int i = 0; i < classes.length; i++) {
+            System.out.println("Classes {i}" + classes[i]);
+        }
+        return checkDay;
+    }
+
+
+    private static boolean checkTime(int time)
+    {
+        if (time < 1 || time > 6)
+            return false;
+        return  true;
+    }
+
+
+
+    private static byte checkDateSceance(Scanner sc, String[] classes)
+    {
+        String input;
+        String  day;
+        int     time;
+        int []count = {0};
+
+        while ((!((input = sc.nextLine()).equals("."))) && count[0] != 9)
+        {   
+            Scanner scInput = new Scanner(input);
+                if (scInput.hasNextInt())
+                    time = scInput.nextInt();  
+                else
+                {
+                    scInput.close();
+                    return 1;
+                }
+                if (scInput.hasNext())
+                    day = scInput.next();
+                else
+                {
+                    scInput.close();
+                    return 2;
+                }
+                if (scInput.hasNext())
+                {
+                    scInput.close();
+                    return 3;
+                }
+                scInput.close();
+                if (!checkTime(time))
+                    return 4;
+                if (!checkDay(classes, input, day, count))
+                    return 5;
+        }
+        return 6;
+    }
+    // ***********************************          classes   ************************************//
+
+
+
+
+    // *********************************** Function for fillNames   ************************************//
+
+    private static boolean checkDuplicatedName(String nameStudent, String[] names)
+    {
+        int i = 0;
+
+        while(names[i] != null && i < names.length)
+        {
+            if (names[i].equals(nameStudent))
+                return false;
+            i++;
+        }
+        return true;
+    }
+
+    private static byte fillNames(Scanner sc, String[] names)
+    {
+        String input;
+        int count = 0;
+        String nameStudent = "";
+        byte res = 0;
+
+        while ((res == 0) && (!((input = sc.nextLine()).equals("."))) && count != 9)
+        {   
+                Scanner scInput = new Scanner(input);
+                if (scInput.hasNext())
+                    nameStudent = scInput.next();
+                else
+                    res = 1;
+                if (scInput.hasNext())
+                    res = 2;
+                else if (nameStudent.length() > 10)
+                    res = 3;
+                else if (!checkDuplicatedName(nameStudent, names))
+                        System.out.println("Your input name  is already duplicated -______>> "+ nameStudent + " [^_^]!");
+                else
+                    names[count++] = nameStudent;
+                scInput.close();
+        }
+        if (count == 9)
+            return 9;
+        return res;
+    }
+    // *******************************************    fillNames    ************************************//
+
+
+
+    
     public static void main(String[] args)
     {
         
